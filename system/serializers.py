@@ -9,11 +9,6 @@ from table.models import Table
 from .models import System
 
 
-class TableSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Table
-        fields='__all__'
-
 # System Serializer
 class SystemSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,11 +17,11 @@ class SystemSerializer(serializers.ModelSerializer):
         depth=1
 
 
-# System CRUD Serializer
-class SystemCRUDSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = System
-        fields = ('id', 'name', 'description')
-        
 
+
+# # Table Serializer
+# class TableSerializer(serializers.HyperlinkedModelSerializer):
+#     class Meta:
+#         model = Table
+#         fields='__all__'
