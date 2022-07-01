@@ -20,4 +20,3 @@ class QuerylogCreateSerializer(serializers.ModelSerializer):
         model = Querylog
         fields = ('query_ino', 'query_type', 'sr_number', 'manager')
 
-
