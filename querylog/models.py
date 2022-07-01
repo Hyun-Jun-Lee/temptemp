@@ -10,3 +10,7 @@ class Querylog(models.Model):
     query_type = models.CharField(max_length=10)
     requerst_time = models.DateTimeField()
     manager = models.CharField(max_length=20)
+
+    @property
+    def server_name(self):
+        return 
