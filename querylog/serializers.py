@@ -5,7 +5,9 @@ from .models import Querylog
 class QuerylogListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Querylog
-        fields = ('id','server_name','systems_name','sr_number','query_info','query_type','requerst_time','manager')
+        # fields = ('id','server_name','systems_name','sr_number','query_info','query_type','requerst_time','manager')
+        fields = ('__all__')
+        depth=2
 
 
 # SR 인증버호만 수정e
@@ -18,5 +20,5 @@ class QuerylogSRSerializer(serializers.ModelSerializer):
 class QuerylogCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Querylog
-        fields = ('query_ino', 'query_type', 'sr_number', 'manager')
+        fields = ('table','query_info', 'query_type', 'sr_number', 'manager')
 
