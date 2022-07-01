@@ -5,10 +5,10 @@ from .models import Querylog
 class QuerylogListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Querylog
-        fields = ('__all__')
+        fields = ('id','server_name','systems_name','sr_number','query_info','query_type','requerst_time','manager')
 
 
-# SR 인증버호만 수정
+# SR 인증버호만 수정e
 class QuerylogSRSerializer(serializers.ModelSerializer):
     class Meta:
         model = Querylog

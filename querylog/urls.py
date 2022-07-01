@@ -3,5 +3,5 @@ from . import views
 
 
 urlpatterns = [
-
+    path('querylogs', views.QuerylogListView.as_view())
 ]
