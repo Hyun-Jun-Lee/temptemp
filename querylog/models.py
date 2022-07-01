@@ -9,7 +9,7 @@ class Querylog(models.Model):
     query_info = models.TextField()
     query_type = models.CharField(max_length=10)
     requerst_time = models.DateTimeField(auto_now_add=True)
-    manager = models.CharField(max_length=20)
+    manager = models.CharField(max_length=20, blank=True, null=True)
 
     @property
     def server_name(self):
