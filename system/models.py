@@ -1,6 +1,15 @@
 from django.db import models
+from table.models import Table
 
 
 class System(models.Model):
     name = models.CharField(max_length=20)
-    system_description = models.TextField()
+    description = models.TextField()
+    tables = models.ManyToManyField(Table, related_name="systems")
+
+    @property
+    def table_names(self):
+        return [x.name for x in self.tables]
+
+
+
