@@ -6,13 +6,6 @@ from .serializers import *
 from drf_yasg.utils import swagger_auto_schema
 
 
-
-
-class TableViewSet(
-    viewsets.ModelViewSet):
-    queryset = Table.objects.all()
-    serializer_class =TableSerializer
-
 class SystemViewSet(
     viewsets.ModelViewSet):
     queryset = System.objects.all()
