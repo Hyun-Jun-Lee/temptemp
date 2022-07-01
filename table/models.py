@@ -7,3 +7,10 @@ class Table(models.Model):
         Server, on_delete=models.CASCADE, related_name="tables")
     name = models.CharField(max_length=20)
     db_platform = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def system_names(self):
+        return [i.name for i in self.systems.all()]

@@ -5,12 +5,16 @@ from table.models import Table
 class Querylog(models.Model):
     table = models.ForeignKey(
         Table, on_delete=models.CASCADE, related_name="querylogs")
-    sr_number = models.CharField(max_length=20)
+    sr_number = models.CharField(max_length=20, blank=True, null=True)
     query_info = models.TextField()
     query_type = models.CharField(max_length=10)
-    requerst_time = models.DateTimeField()
-    manager = models.CharField(max_length=20)
+    requerst_time = models.DateTimeField(auto_now_add=True)
+    manager = models.CharField(max_length=20, blank=True, null=True)
 
     @property
     def server_name(self):
-        return 
+        return self.table.server.name
+
+    @property
+    def systems_name(self):
+        return self.table.systems_name
