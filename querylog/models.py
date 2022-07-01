@@ -15,4 +15,6 @@ class Querylog(models.Model):
     def server_name(self):
         return self.table.server.name
 
-    
+    @property
+    def systems_name(self):
+        return self.table.systems_name
