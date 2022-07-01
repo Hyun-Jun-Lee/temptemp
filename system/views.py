@@ -25,7 +25,7 @@ class SystemViewSet(viewsets.ModelViewSet):
                             - 모든 system
                         """)
     def list(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @swagger_auto_schema(request_body=SystemSerializer,
                         operation_description="""
