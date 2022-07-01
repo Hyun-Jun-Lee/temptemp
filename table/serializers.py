@@ -8,8 +8,8 @@ class TableListSerializer(serializers.ModelSerializer):
     os_ver = serializers.CharField(source='server.os_ver')
     class Meta:
         model = Table
-        fields = ('db_platform', 'server_name', 'os_ver', 'name', 'systems')
-        
+        fields = ('db_platform', 'server_name', 'os_ver', 'name','system_names')
+
 
 class TableUpdateSerializer(serializers.ModelSerializer):
     class Meta:
