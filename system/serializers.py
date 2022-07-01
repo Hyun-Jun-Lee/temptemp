@@ -15,13 +15,3 @@ class SystemSerializer(serializers.ModelSerializer):
         model = System
         fields = ('id', 'name', 'description', 'tables')
         depth=1
-
-
-
-
-
-# # Table Serializer
-# class TableSerializer(serializers.HyperlinkedModelSerializer):
-#     class Meta:
-#         model = Table
-#         fields='__all__'
