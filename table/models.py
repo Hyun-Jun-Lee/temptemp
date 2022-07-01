@@ -10,10 +10,7 @@ class Table(models.Model):
 
     def __str__(self):
         return self.name
-    
-        # @property
-    # def table_names(self):
-    #     return [x.name for x in self.tables]
+
     @property
     def system_names(self):
         return [i.name for i in self.systems.all()]
