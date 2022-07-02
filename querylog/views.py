@@ -43,3 +43,4 @@ class QuerylogCreateView(CreateAPIView):
 
 class QuerylogExtractView(ListAPIView):
     queryset = Querylog.objects.all()
+

@@ -22,3 +22,10 @@ class QuerylogCreateSerializer(serializers.ModelSerializer):
         model = Querylog
         fields = ('table','query_info', 'query_type', 'sr_number', 'manager')
 
+# extract 
+class QuerylogExtractSerializer(serializers.Serializer):
+    sample_percent = serializers.FloatField()
+    sample_min = serializers.IntegerField()
+    sample_max = serializers.IntegerField()
+
+# DML, DDL filter
