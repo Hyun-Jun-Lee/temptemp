@@ -3,11 +3,12 @@ from .models import Querylog
 
 # SR 페이지 
 class QuerylogListSerializer(serializers.ModelSerializer):
+    system = serializers.ListField(source='system_name')
     class Meta:
         model = Querylog
         # fields = ('id','server_name','systems_name','sr_number','query_info','query_type','requerst_time','manager')
         fields = ('__all__')
-        depth=2
+        depth=3
 
 
 # SR 인증버호만 수정e
