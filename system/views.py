@@ -27,6 +27,14 @@ class SystemViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
+    @swagger_auto_schema(
+                        operation_description="""
+                        # 설명
+                            - 각각의 system
+                        """)
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
     @swagger_auto_schema(request_body=SystemSerializer,
                         operation_description="""
                         # 설명
