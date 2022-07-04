@@ -4,7 +4,7 @@ from rest_framework.routers import SimpleRouter
 from system.views import SystemViewSet
 
 router = routers.DefaultRouter()
-router = routers.SimpleRouter(trailing_slash=False)      # router.trailing_slash=""
+router = SimpleRouter(trailing_slash=False)      # router.trailing_slash=""
 router.register('system',SystemViewSet)
 
 urlpatterns = [
