@@ -24,8 +24,8 @@ class QuerylogCreateSerializer(serializers.ModelSerializer):
 
 # extract 
 class QuerylogExtractSerializer(serializers.Serializer):
-    sample_percent = serializers.FloatField()
-    sample_min = serializers.IntegerField()
-    sample_max = serializers.IntegerField()
+    sample_percent = serializers.FloatField(help_text = "모집단 %", required = False)
+    sample_min = serializers.IntegerField(help_text="최소값", required = False, default=0)
+    sample_max = serializers.IntegerField(help_text="최대값", required = False, default=0)
 
 # DML, DDL filter
