@@ -9,6 +9,7 @@ from drf_yasg.utils import swagger_auto_schema
 from random import random
 import numpy as np
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import parsers
 
 
 class QuerylogListPagination(PageNumberPagination):
@@ -43,24 +44,28 @@ class QuerylogSRregisterView(UpdateAPIView):
 class QuerylogCreateView(CreateAPIView):
     queryset = Querylog.objects.all()
     serializer_class = QuerylogCreateSerializer
+    parser_classes = [parsers.FormParser]
+
+
 
 class QuerylogExtractView(ListAPIView):
     queryset = Querylog.objects.all()
     serializer_class = QuerylogListSerializer
 
-    filter_backends = [DjangoFilterBackend]
-    filter_fields = ['query_type']
+    # filter_backends = [DjangoFilterBackend]
+    # filter_fields = ['query_type']
 
     @swagger_auto_schema(query_serializer=QuerylogExtractSerializer)
     def get(self, request, *args, **kwargs):
+        query_type = request.GET['Query_type']
+        query_type_queryset = self.queryset.filter(query_type=query_type)
         try:
             sample_percent = request.GET['sample_percent']
             sample_min = request.GET['sample_min']
             sample_max = request.GET['sample_max']
 
-            size = self.queryset.all().count() * int(sample_percent)//100
-            populations = np.random.choice(self.queryset.all(), size = size, replace=True)
-            print(populations)
+            size = query_type_queryset.count() * int(sample_percent)//100
+            populations = np.random.choice(query_type_queryset, size = size, replace=True)
             serializers = self.serializer_class
             return Response(serializers(populations, many=True).data)
         except:
