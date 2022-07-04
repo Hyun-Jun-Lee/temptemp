@@ -7,7 +7,9 @@ class System(models.Model):
     description = models.TextField()
     tables = models.ManyToManyField(Table, related_name="systems")
 
-    @property
+    def __str__(self):
+        return self.name
+
     def table_names(self):
         return [x.name for x in self.tables]
 
