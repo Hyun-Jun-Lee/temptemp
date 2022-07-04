@@ -1,14 +1,17 @@
+from turtle import st
 from webbrowser import get
+from xml.dom import NotFoundErr
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from .serializers import *
-from rest_framework import filters
+from rest_framework import filters, status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from collections import OrderedDict
 from drf_yasg.utils import swagger_auto_schema
 
 # modelviewset이 아니라 따로따로 나눠야할까..?
+
 
 class SystemViewSet(viewsets.ModelViewSet):
     queryset = System.objects.all().order_by('id')
@@ -18,6 +21,11 @@ class SystemViewSet(viewsets.ModelViewSet):
 
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'description', 'tables__name']
+
+    # def get_serializer_class(self):
+    #     if self.action == 'create' or 'update':
+    #         return SystemCreateUpdateSerializer
+    #     return super().get_serializer_class()
 
     @swagger_auto_schema(
                         operation_description="""
@@ -36,7 +44,21 @@ class SystemViewSet(viewsets.ModelViewSet):
                             - description : system 설명
                         """)
     def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
+        serializer = self.get_serializer(data=request.data)
+    
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        system_id = serializer.data['id']
+        system= System.objects.get(id=system_id)
+        for id in request.data['table']:
+            try:
+                table = Table.objects.get(id=id)
+                system.tables.add(table)
+            except:
+                raise Exception(f"There is no valid Table id: '{id}'")
+        headers = self.get_success_headers(serializer.data)
+        return Response(SystemSerializer(system).data, status=status.HTTP_201_CREATED, headers=headers)
+
 
     @swagger_auto_schema(request_body=SystemSerializer,
                         operation_description="""
@@ -47,7 +69,31 @@ class SystemViewSet(viewsets.ModelViewSet):
                             - description : system 설명
                         """)
     def update(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
+            
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        print(serializer.data)
+        system_id = serializer.data['id']
+        system= System.objects.get(id=system_id)
+        for table in system.tables.all():
+            system.tables.remove(table)
+        for id in request.data['table']:
+            try:
+                table = Table.objects.get(id=id)
+                system.tables.add(table)
+            except:
+                raise Exception(f"There is no valid Table id: '{id}'")
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(SystemSerializer(system).data,status=status.HTTP_202_ACCEPTED)
+        
 
     @swagger_auto_schema(
                         operation_description="""
@@ -66,10 +112,3 @@ class SystemListPagination(PageNumberPagination):
             ('count', self.page.paginator.num_pages),
             ('results', data)
         ]))
-
-
-
-
-# class TableViewSet(viewsets.ModelViewSet):
-#     queryset = Table.objects.all()
-#     serializer_class = TableSerializer
