@@ -22,11 +22,6 @@ class SystemViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'description', 'tables__name']
 
-    # def get_serializer_class(self):
-    #     if self.action == 'create' or 'update':
-    #         return SystemCreateUpdateSerializer
-    #     return super().get_serializer_class()
-
     @swagger_auto_schema(
                         operation_description="""
                         # 설명
@@ -42,6 +37,7 @@ class SystemViewSet(viewsets.ModelViewSet):
                         # Request Body
                             - name : system 명칭
                             - description : system 설명
+                            - table : system에 속해야 하는 table 값들의 id
                         """)
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -67,6 +63,7 @@ class SystemViewSet(viewsets.ModelViewSet):
                         # Request Body
                             - name : system 명칭
                             - description : system 설명
+                            - table : system에 속해야 하는 table 값들의 id
                         """)
     def update(self, request, *args, **kwargs):
             
@@ -75,7 +72,6 @@ class SystemViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
-        print(serializer.data)
         system_id = serializer.data['id']
         system= System.objects.get(id=system_id)
         for table in system.tables.all():
