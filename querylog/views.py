@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.http import FileResponse
 from django.shortcuts import render
 from .serializers import *
@@ -15,6 +16,7 @@ from rest_framework import parsers
 from openpyxl import Workbook
 from openpyxl.styles import Font
 from datetime import datetime
+from django.conf import settings
 
 
 class QuerylogListPagination(PageNumberPagination):
@@ -167,7 +169,7 @@ class QuerylogDownloadView(ListAPIView):
             ws.append([index+1] + list(item.values()))
         today = datetime.today().date()
         file_name = f'{today}.xlsx'
-        file_path = f'/Users/logstack/Desktop/QueryStacker-backend/excel/{file_name}'
+        file_path = f'{settings.BASE_DIR}/excel/{file_name}'
         wb.save(file_path)
 
         response = FileResponse(open(file_path, "rb"))
