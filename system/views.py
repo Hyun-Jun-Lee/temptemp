@@ -1,8 +1,4 @@
-from turtle import st
-from webbrowser import get
-from xml.dom import NotFoundErr
-from django.shortcuts import render
-from rest_framework import viewsets, generics
+from rest_framework import viewsets
 from .serializers import *
 from rest_framework import filters, status
 from rest_framework.pagination import PageNumberPagination
@@ -12,11 +8,19 @@ from drf_yasg.utils import swagger_auto_schema
 
 # modelviewset이 아니라 따로따로 나눠야할까..?
 
+class SystemListPagination(PageNumberPagination):
+    page_size = 17
+    def get_paginated_response(self, data):
+        return Response(OrderedDict([
+            ('count', self.page.paginator.num_pages),
+            ('results', data)
+        ]))
+
 
 class SystemViewSet(viewsets.ModelViewSet):
     queryset = System.objects.all().order_by('id')
     serializer_class = SystemSerializer
-    pagination_class = PageNumberPagination
+    pagination_class = SystemListPagination
     http_method_names= ['get','post','put','delete']
 
     filter_backends = [filters.SearchFilter]
@@ -41,7 +45,6 @@ class SystemViewSet(viewsets.ModelViewSet):
                         """)
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-    
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         system_id = serializer.data['id']
@@ -66,7 +69,6 @@ class SystemViewSet(viewsets.ModelViewSet):
                             - table : system에 속해야 하는 table 값들의 id
                         """)
     def update(self, request, *args, **kwargs):
-            
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
@@ -98,13 +100,3 @@ class SystemViewSet(viewsets.ModelViewSet):
                         """)
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
-
-
-class SystemListPagination(PageNumberPagination):
-    page_size = 17
-
-    def get_paginated_response(self, data):
-        return Response(OrderedDict([
-            ('count', self.page.paginator.num_pages),
-            ('results', data)
-        ]))
