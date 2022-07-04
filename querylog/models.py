@@ -22,7 +22,7 @@ class Querylog(models.Model):
     )
 
     query_type = models.CharField(max_length=10, choices=query_type_choices)
-    requerst_time = models.DateTimeField(auto_now_add=True)
+    request_time = models.DateTimeField(auto_now_add=True)
     manager = models.CharField(max_length=20, blank=True, null=True)
 
     @property
@@ -30,5 +30,5 @@ class Querylog(models.Model):
         return self.table.server.name
 
     @property
-    def systems_name(self):
-        return self.table.systems_name
+    def system_name(self):
+        return [i for i in self.table.system_names]
