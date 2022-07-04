@@ -25,6 +25,7 @@ class QuerylogCreateSerializer(serializers.ModelSerializer):
 # extract 
 class QuerylogExtractSerializer(serializers.Serializer):
     query_type_choices = (
+        ('ALL','ALL'),
         ('SELECT','SELECT'),
         ('INSERT', 'INSERT'),
         ('UPDATE','UPDATE'),
@@ -39,4 +40,4 @@ class QuerylogExtractSerializer(serializers.Serializer):
     Query_type = serializers.MultipleChoiceField(required=True, choices=query_type_choices)
     sample_percent = serializers.FloatField(help_text = "모집단 %", required = False, default=100)
     sample_min = serializers.IntegerField(help_text="최소값", required = False, default=0)
-    sample_max = serializers.IntegerField(help_text="최대값", required = False, default=0)
+    sample_max = serializers.IntegerField(help_text="최대값", required = False, default=100)

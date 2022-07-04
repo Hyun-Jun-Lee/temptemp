@@ -59,16 +59,20 @@ class QuerylogExtractView(ListAPIView):
     def get(self, request, *args, **kwargs):
         return_serializer = []
         for query_type in request.GET.getlist('Query_type'):
-            query_type_queryset = self.queryset.filter(query_type=query_type)
+            if query_type != 'ALL':
+                query_type_queryset = self.queryset.filter(query_type=query_type)
+            else:
+                query_type_queryset = self.queryset.all()
 
-            sample_percent = request.GET['sample_percent']
-            sample_min = request.GET['sample_min']
-            sample_max = request.GET['sample_max']
+                sample_percent = request.GET['sample_percent']
+                sample_min = request.GET['sample_min']
+                sample_max = request.GET['sample_max']
 
-            size = query_type_queryset.count() * int(sample_percent)//100
-            populations = np.random.choice(query_type_queryset, size = size, replace=True)
-            serializers = self.serializer_class
-            # return Response(serializers(populations, many=True).data)
-            return_serializer += serializers(populations, many=True).data
+                size = query_type_queryset.count() * int(sample_percent)//100
+                populations = np.random.choice(query_type_queryset, size = size, replace=True)
+                serializers = self.serializer_class
+                # return Response(serializers(populations, many=True).data)
+                return_serializer += serializers(populations, many=True).data
+                
 
         return Response(return_serializer)
