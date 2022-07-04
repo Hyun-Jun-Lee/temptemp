@@ -64,12 +64,16 @@ class QuerylogExtractView(ListAPIView):
             else:
                 query_type_queryset = self.queryset.all()
 
-                sample_percent = request.GET['sample_percent']
-                sample_min = request.GET['sample_min']
-                sample_max = request.GET['sample_max']
+                sample_percent = int(request.GET['sample_percent'])
+                sample_min = int(request.GET['sample_min'])
+                sample_max = int(request.GET['sample_max'])
 
-                size = query_type_queryset.count() * int(sample_percent)//100
-                populations = np.random.choice(query_type_queryset, size = size, replace=True)
+                cnt = query_type_queryset.count() * sample_percent//100
+                # 추출 예정 갯수가 min 값 보다 작을 경우 sample_min에 갯수를 맞춰준다
+                cnt = sample_min if sample_min and cnt < sample_min else cnt
+                # 추출 예정 갯수가 max 값 보다 클 경우 sample_max에 갯수를 맞춰준다
+                cnt = sample_max if sample_max and cnt > sample_max else cnt
+                populations = np.random.choice(query_type_queryset, size = cnt, replace=True)
                 serializers = self.serializer_class
                 # return Response(serializers(populations, many=True).data)
                 return_serializer += serializers(populations, many=True).data
