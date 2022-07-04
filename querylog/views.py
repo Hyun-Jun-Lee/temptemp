@@ -5,6 +5,7 @@ from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from collections import OrderedDict
+from drf_yasg.utils import swagger_auto_schema
 
 
 class QuerylogListPagination(PageNumberPagination):
@@ -23,6 +24,10 @@ class QuerylogListView(ListAPIView):
     queryset = Querylog.objects.all()
     serializer_class = QuerylogListSerializer
     pagination_class = QuerylogListPagination
+
+    @swagger_auto_schema(tags=['querylog'])
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
 
 
