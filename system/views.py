@@ -5,6 +5,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from collections import OrderedDict
 from drf_yasg.utils import swagger_auto_schema
+from table.models import Table
 
 # modelviewset이 아니라 따로따로 나눠야할까..?
 
