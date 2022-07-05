@@ -21,7 +21,7 @@ class TableListView(ListAPIView):
     pagination_class = TableListPagination
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['name', 'server__name', 'db_platform', 'server__os_ver']
+    search_fields = ['name', 'server__name', 'db_platform', 'server__os_ver', 'systems__name']
     
 
 class TableUpdateView(UpdateAPIView):
