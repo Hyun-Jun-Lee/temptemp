@@ -36,19 +36,40 @@ class QuerylogListView(ListAPIView):
     serializer_class = QuerylogListSerializer
     pagination_class = QuerylogListPagination
 
-    @swagger_auto_schema(tags=['querylog'])
+    @swagger_auto_schema(tags=['querylog'],
+                        operation_description=
+                        """
+                        # 설명
+                            - 모든 SR list
+                        """
+                        )
+
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
 
 
 class QuerylogSRregisterView(UpdateAPIView):
+    """
+    # 설명
+        - SR 번호 등록
+    """
     queryset = Querylog.objects.all()
     serializer_class = QuerylogSRSerializer
     lookup_field = 'pk'
     http_method_names = ['put']
 
 class QuerylogCreateView(CreateAPIView):
+    """
+    # 설명
+        - 쿼리 날리기
+    # 파라미터
+        - table
+        - query_info : sql문
+        - query_type : SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, TRUNCATE, DROP, DESCRIBE, RENAME
+        - sr_number : SR 번호
+        - manager : 담당자
+    """
     queryset = Querylog.objects.all()
     serializer_class = QuerylogCreateSerializer
     parser_classes = [parsers.FormParser]
@@ -56,6 +77,10 @@ class QuerylogCreateView(CreateAPIView):
 
 
 class QuerylogExtractView(ListAPIView):
+    """
+    # 설명
+        - 선택된 DDL, DML 필터가 적용된 SR list
+    """
     queryset = Querylog.objects.all()
     serializer_class = QuerylogListSerializer
 
@@ -78,13 +103,17 @@ class QuerylogExtractView(ListAPIView):
         return Response(return_serializer)
 
 class QuerylogDownloadView(ListAPIView):
+    """
+    # 설명
+        - 필터가 적용된 SR list 중 모집단 추출 및 Excel export
+    """
     queryset = Querylog.objects.all()
     serializer_class = QuerylogListSerializer
 
     # filter_backends = [DjangoFilterBackend]
     # filter_fields = ['query_type']
 
-    @swagger_auto_schema(query_serializer=QuerylogExtractSerializer)
+    @swagger_auto_schema(query_serializer=QuerylogExtractSerializer, tags=['sample'])
     def get(self, request, *args, **kwargs):
         return_serializer = []
         for query_type in request.GET.getlist('Query_type'):
