@@ -17,6 +17,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Font
 from datetime import datetime
 from django.conf import settings
+from .filters import QuerylogFilterSet
 
 
 class QuerylogListPagination(PageNumberPagination):
@@ -31,21 +32,31 @@ class QuerylogListPagination(PageNumberPagination):
 # Create your views here.
 
 
-class QuerylogListView(ListAPIView):
+class QuerylogTotalView(ListAPIView):
     queryset = Querylog.objects.all()
     serializer_class = QuerylogListSerializer
     pagination_class = QuerylogListPagination
 
-    @swagger_auto_schema(tags=['querylog'],
-                        operation_description=
-                        """
-                        # 설명
-                            - 모든 SR list
-                        """
-                        )
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = QuerylogFilterSet
 
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+
+
+# class QuerylogListView(ListAPIView):
+#     queryset = Querylog.objects.all()
+#     serializer_class = QuerylogListSerializer
+#     pagination_class = QuerylogListPagination
+
+#     @swagger_auto_schema(tags=['querylog'],
+#                         operation_description=
+#                         """
+#                         # 설명
+#                             - 모든 SR list
+#                         """
+#                         )
+
+#     def get(self, request, *args, **kwargs):
+#         return super().get(request, *args, **kwargs)
 
 
 
@@ -76,31 +87,52 @@ class QuerylogCreateView(CreateAPIView):
 
 
 
-class QuerylogExtractView(ListAPIView):
+class QuerylogRequestView(ListAPIView):
     """
     # 설명
-        - 선택된 DDL, DML 필터가 적용된 SR list
+        - SR request list(SR 번호가 없는 SR list)
     """
     queryset = Querylog.objects.all()
     serializer_class = QuerylogListSerializer
+    pagination_class = QuerylogListPagination
 
-    # filter_backends = [DjangoFilterBackend]
-    # filter_fields = ['query_type']
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['query_type']
 
-    @swagger_auto_schema(query_serializer=QuerylogSampleSerializer)
     def get(self, request, *args, **kwargs):
-        return_serializer = []
-        for query_type in request.GET.getlist('Query_type'):
-            if query_type != 'ALL':
-                query_type_queryset = self.queryset.filter(query_type=query_type)
-            else:
-                query_type_queryset = self.queryset.all()
-            serializers = self.serializer_class
-            # return Response(serializers(populations, many=True).data)
-            return_serializer += serializers(query_type_queryset, many=True).data
+        self.queryset = Querylog.objects.filter(sr_number=None)
+        return super().get(request, *args, **kwargs)
+
+class QuerylogCompleteView(ListAPIView):
+    """
+    # 설명
+        - SR complete list(SR 번호가 있는 SR list)
+    """
+    queryset = Querylog.objects.all()
+    serializer_class = QuerylogListSerializer
+    pagination_class = QuerylogListPagination
+
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['query_type']
+
+    def get(self, request, *args, **kwargs):
+        self.queryset = Querylog.objects.exclude(sr_number=None)
+        return super().get(request, *args, **kwargs)
+
+    # @swagger_auto_schema(query_serializer=QuerylogSampleSerializer)
+    # def get(self, request, *args, **kwargs):
+    #     return_serializer = []
+    #     for query_type in request.GET.getlist('Query_type'):
+    #         if query_type != 'ALL':
+    #             query_type_queryset = self.queryset.filter(query_type=query_type)
+    #         else:
+    #             query_type_queryset = self.queryset.all()
+    #         serializers = self.serializer_class
+    #         # return Response(serializers(populations, many=True).data)
+    #         return_serializer += serializers(query_type_queryset, many=True).data
 
 
-        return Response(return_serializer)
+    #     return Response(return_serializer)
 
 class QuerylogDownloadView(ListAPIView):
     """
