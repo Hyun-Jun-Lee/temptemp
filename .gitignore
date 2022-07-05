@@ -179,5 +179,6 @@ venv/
 myvenv/
 secrets.json
 */migrations/
+excel/
 
 .gitmessages.txt
