@@ -50,7 +50,7 @@ class SystemViewSet(viewsets.ModelViewSet):
                         # Request Body
                             - name : system 명칭
                             - description : system 설명
-                            - table : system에 속해야 하는 table 값들의 id
+                            - table : system에 속해야 하는 table 값들의 id list
                         """)
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -75,7 +75,7 @@ class SystemViewSet(viewsets.ModelViewSet):
                         # Request Body
                             - name : system 명칭
                             - description : system 설명
-                            - table : system에 속해야 하는 table 값들의 id
+                            - table : system에 속해야 하는 table 값들의 id list
                         """)
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
