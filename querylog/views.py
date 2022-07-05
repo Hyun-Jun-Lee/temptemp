@@ -70,9 +70,9 @@ class QuerylogExtractView(ListAPIView):
                 query_type_queryset = self.queryset.filter(query_type=query_type)
             else:
                 query_type_queryset = self.queryset.all()
-                serializers = self.serializer_class
-                # return Response(serializers(populations, many=True).data)
-                return_serializer += serializers(query_type_queryset, many=True).data
+            serializers = self.serializer_class
+            # return Response(serializers(populations, many=True).data)
+            return_serializer += serializers(query_type_queryset, many=True).data
 
 
         return Response(return_serializer)
