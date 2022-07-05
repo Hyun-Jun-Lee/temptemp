@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from querylog.models import Querylog
 from .models import Server
 from .serializers import ServerListSerializer
+from drf_yasg.utils import swagger_auto_schema
 
 # class ServerListView(ListAPIView):
 #     queryset = Server.objects.all()
@@ -12,6 +13,12 @@ class DashBoardView(ListAPIView):
     queryset = Server.objects.all()
     serializer_class = ServerListSerializer
 
+    @swagger_auto_schema(
+                        operation_description="""
+                        # 설명
+                            - sr_info : 승인된 sr의 수와 승인되지 않은 sr의 수
+                            - servers : server의 정보
+                        """)
     def list(self, request, *args, **kwargs):
         
         queryset = self.get_queryset()
