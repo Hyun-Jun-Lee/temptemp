@@ -30,7 +30,7 @@ class TableListView(ListAPIView):
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
-    
+        
 
 class TableUpdateView(UpdateAPIView):
     """
