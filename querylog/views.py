@@ -62,7 +62,7 @@ class QuerylogExtractView(ListAPIView):
     # filter_backends = [DjangoFilterBackend]
     # filter_fields = ['query_type']
 
-    @swagger_auto_schema(query_serializer=QuerylogExtractSerializer)
+    @swagger_auto_schema(query_serializer=QuerylogSampleSerializer)
     def get(self, request, *args, **kwargs):
         return_serializer = []
         for query_type in request.GET.getlist('Query_type'):
@@ -70,20 +70,9 @@ class QuerylogExtractView(ListAPIView):
                 query_type_queryset = self.queryset.filter(query_type=query_type)
             else:
                 query_type_queryset = self.queryset.all()
-
-                sample_percent = int(request.GET['sample_percent'])
-                sample_min = int(request.GET['sample_min'])
-                sample_max = int(request.GET['sample_max'])
-
-                cnt = query_type_queryset.count() * sample_percent//100
-                # 추출 예정 갯수가 min 값 보다 작을 경우 sample_min에 갯수를 맞춰준다
-                cnt = sample_min if sample_min and cnt < sample_min else cnt
-                # 추출 예정 갯수가 max 값 보다 클 경우 sample_max에 갯수를 맞춰준다
-                cnt = sample_max if sample_max and cnt > sample_max else cnt
-                populations = np.random.choice(query_type_queryset, size = cnt, replace=True)
                 serializers = self.serializer_class
                 # return Response(serializers(populations, many=True).data)
-                return_serializer += serializers(populations, many=True).data
+                return_serializer += serializers(query_type_queryset, many=True).data
 
 
         return Response(return_serializer)
