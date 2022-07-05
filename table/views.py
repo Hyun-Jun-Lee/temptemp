@@ -17,6 +17,10 @@ class TableListPagination(PageNumberPagination):
         ]))
 
 class TableListView(ListAPIView):
+    """
+    # 설명
+        - table 모델의 정보
+    """
     queryset = Table.objects.all()
     serializer_class = TableListSerializer
     pagination_class = TableListPagination
@@ -24,24 +28,18 @@ class TableListView(ListAPIView):
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'server__name', 'db_platform', 'server__os_ver', 'systems__name']
 
-    @swagger_auto_schema(
-                        operation_description="""
-                        # 설명
-                            - table 모델의 정보
-                        """)
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
     
 
 class TableUpdateView(UpdateAPIView):
+    """
+    # 설명
+        - 수정할 내용 입력
+        - server의 경우, id 값을 입력
+    """
     queryset = Table.objects.all()
     serializer_class = TableUpdateSerializer
 
-    @swagger_auto_schema(
-                        operation_description="""
-                        # 설명
-                            - 수정할 내용 입력
-                            - server의 경우, id 값을 입력
-                        """)
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)

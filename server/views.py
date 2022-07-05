@@ -10,17 +10,17 @@ from drf_yasg.utils import swagger_auto_schema
 #     serializer_class = ServerListSerializer
 
 class DashBoardView(ListAPIView):
+    """
+    # 설명
+        - sr_info : 승인된 sr의 수와 승인되지 않은 sr의 수
+        - servers : server의 정보
+    """
+ 
     queryset = Server.objects.all()
     serializer_class = ServerListSerializer
 
-    @swagger_auto_schema(
-                        operation_description="""
-                        # 설명
-                            - sr_info : 승인된 sr의 수와 승인되지 않은 sr의 수
-                            - servers : server의 정보
-                        """)
+
     def list(self, request, *args, **kwargs):
-        
         queryset = self.get_queryset()
         not_approved_sr = Querylog.objects.filter(sr_number__isnull=True).count()
         approved_sr = Querylog.objects.exclude(sr_number__isnull=True).count()
