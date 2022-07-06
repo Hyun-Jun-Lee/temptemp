@@ -16,6 +16,7 @@ class QuerylogFilterSet(FilterSet):
 
     request_time_min = filters.DateFilter(field_name='request_time', lookup_expr='gte')
     request_time_max = filters.DateFilter(field_name='request_time', lookup_expr='lte') 
+    # sr_number = filters.BooleanFilter(field_name='sr_number')
 
     class Meta:
         model = Querylog

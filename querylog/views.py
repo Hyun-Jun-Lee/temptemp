@@ -39,6 +39,22 @@ class QuerylogTotalView(ListAPIView):
 
     filter_backends = [DjangoFilterBackend]
     filterset_class = QuerylogFilterSet
+    
+    @swagger_auto_schema(query_serializer=QuerylogSampleSerializer)
+    def get(self, request, *args, **kwargs):
+        return_serializer = []
+        for query_type in request.GET.getlist('Query_type'):
+            if query_type != 'ALL':
+                query_type_queryset = self.queryset.filter(query_type=query_type)
+            else:
+                query_type_queryset = self.queryset.all()
+            serializers = self.serializer_class
+            # return Response(serializers(populations, many=True).data)
+            return_serializer += serializers(query_type_queryset, many=True).data
+            self.queryset = query_type_queryset
+
+        # return Response(return_serializer)
+        return super().get(request, *args, **kwargs)
 
 
 
